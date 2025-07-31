@@ -31,98 +31,6 @@ class BaseTask:
         """运行任务"""
         raise NotImplementedError
 
-## gad
-# class RelationExtractionTask(BaseTask):
-#     """关系抽取任务"""
-    
-#     def __init__(self):
-#         super().__init__("relation_extraction")
-    
-#     def setup(self, model_name: str = None, data_source: str = "custom", **kwargs):
-#         """设置关系抽取任务"""
-#         print(f"设置关系抽取任务...")
-        
-#         # 初始化模型
-#         self.model = ModelFactory.create_model("relation_extraction", model_name)
-        
-#         # 初始化数据处理器
-#         self.data_processor = DataProcessorFactory.create_processor("gad")
-        
-#         # 初始化评估器
-#         self.evaluator = EvaluatorFactory.create_evaluator(
-#             "relation_extraction", 
-#             relation_labels=RELATION_LABELS
-#         )
-        
-#         print("任务设置完成!")
-    
-#     def run(self, max_samples: int = None, verbose: bool = True) -> Dict:
-#         """运行关系抽取任务"""
-#         if not all([self.model, self.data_processor, self.evaluator]):
-#             raise ValueError("请先调用setup()方法设置任务组件")
-        
-#         max_samples = max_samples or EVALUATION_CONFIG["max_samples"]
-        
-#         print(f"=== 开始运行关系抽取任务 ===")
-        
-#         # 1. 加载数据
-#         print("1. 加载数据...")
-#         test_data = self.data_processor.load_data()
-#         if test_data.empty:
-#             print("错误: 数据加载失败!")
-#             return {}
-        
-#         # 限制样本数量
-#         test_data = test_data.head(max_samples)
-#         print(f"测试样本数量: {len(test_data)}")
-        
-#         # 2. 执行预测
-#         print("\n2. 执行关系抽取...")
-#         predictions = []
-#         true_labels = test_data['label'].tolist()
-        
-#         for idx, row in test_data.iterrows():
-#             # 生成prompt
-#             prompt = self.prompt_manager.get_relation_extraction_prompt(
-#                 row['text']
-#             )
-            
-#             # 执行预测
-#             pred_relation = self.model.extract_relation(prompt)
-
-#             print(f"样本 {idx+1} 预测关系: {pred_relation}")
-#             predictions.append(pred_relation)
-            
-#             if verbose:
-#                 print(f"样本 {idx+1}:")
-#                 print(f"  文本: {row['text'][:100]}...")
-#                 print(f"  真实关系: {row['label']}")
-#                 print(f"  预测关系: {pred_relation}")
-#                 print(f"  正确: {'✓' if pred_relation == row['label'] else '✗'}")
-#                 print()
-        
-#         # 3. 评估结果
-#         print("3. 评估结果...")
-#         ####################### gad
-#         import ast
-#         true_labels = list(map(str, true_labels))
-#         predictions = list(map(str, predictions))
-#         true_labels = [ast.literal_eval(item)[0] for item in true_labels]
-#         print("true labels: ", true_labels)
-#         print("predictions: ", predictions)
-#         ####################### gad
-#         results = self.evaluator.evaluate_with_details(true_labels, predictions, test_data)
-        
-#         if verbose:
-#             self.evaluator.print_detailed_results(true_labels, predictions)
-            
-#             # 详细分类报告
-#             detailed_report = self.evaluator.get_detailed_report(true_labels, predictions)
-#             print("\n=== 详细分类报告 ===")
-#             print(detailed_report)
-        
-#         return results
-
 class RelationExtractionTask(BaseTask):
     """关系抽取任务"""
     
@@ -332,7 +240,6 @@ class NERTask(BaseTask):
         # 转换为大写
         true_labels = [label.upper() for label in true_labels]  
         if data_source == "bc2gm":
-            # 过滤掉'O'标签
             converted_tags = [
                         'O' if tag == '0' else 
                         'B-DISEASE' if tag == '1' else 
@@ -342,18 +249,7 @@ class NERTask(BaseTask):
 
             true_labels = converted_tags
 
-        # print(true_labels)
-
-        # id2label = {
-        #         0: "O",
-        #         1: "B-DISEASE",
-        #         2: "I-DISEASE"
-        #     }
-        # true_labels = [id2label[int(tag)] for tag in true_labels]
-
         print("真实实体标签长度:", len(true_labels))
-
-        # print(f"扁平化后的真实实体标签: {true_labels}")
         
         for idx, row in test_data.iterrows():
             # 生成prompt
@@ -370,18 +266,11 @@ class NERTask(BaseTask):
                     data_source, row['text'], row['tokens'], row['ner_tags']
                 )
 
-            # print(f"prompt: {prompt}")
-            
-            # 执行预测
             pred_ner = self.model.extract_entities(prompt)
 
             print(f"样本 {idx+1} 预测关系: {pred_ner}")
-            # predictions.append(pred_ner)
-
-            # 将真实标签转换为大写
             ner_tags_upper = [label.upper() for label in row['ner_tags']]
 
-            # 将内容中0替换为O，1替换为B-DISEASE，2替换为I-DISEASE
             
             converted_tags = [
                     'O' if tag == '0' else 
@@ -525,14 +414,14 @@ class QATask(BaseTask):
         results = {"predictions": predictions}
         
         if true_labels:
-            # if data_source == "pubmedqa":
-            #     # 取true_labels的后500个元素
-            #     if len(true_labels) > 500:
-            #         true_labels = true_labels[-500:]
-            #         print(len(true_labels))
-            #     if len(predictions) > 500:
-            #         predictions = predictions[-500:]
-            #         print(len(predictions))
+            if data_source == "pubmedqa":
+                # 取true_labels的后500个元素
+                if len(true_labels) > 300:
+                    true_labels = true_labels[-300:]
+                    print(len(true_labels))
+                if len(predictions) > 300:
+                    predictions = predictions[-300:]
+                    print(len(predictions))
             eval_results = self.evaluator.evaluate_with_details(true_labels, predictions)
             results.update(eval_results)
             
