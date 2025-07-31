@@ -1,13 +1,8 @@
 # prompts.py
-"""
-Prompt管理模块 - 集中管理所有的prompt模板
-"""
 
 class PromptManager:
-    """Prompt管理器"""
     @staticmethod
     def get_relation_extraction_prompt(data_source: str, text: str, entity1: str=None, entity2: str=None) -> str:
-        """获取关系抽取的prompt - 改进版本"""
         if data_source == 'chemport':
             prompt = f"""[Task: RE][Domain: bigbio/chemprot]. You are an expert in biomedical relation extraction. 
                 Given a text and two entities, identify the relationship between the entities based on the predefined relation types.
@@ -37,7 +32,6 @@ class PromptManager:
 
     @staticmethod
     def get_ner_prompt(data_source: str, text: str, tokens: str, info: str) -> str:
-        """获取关系抽取的prompt - 改进版本"""
         if data_source == 'bc2gm':
             prompt = f"""[Task: NER][Domain: spyysalo/bc2gm_corpus] You are a biomedical named entity recognition (NER) expert. 
             Please extract and label all predefined biomedical entities using the BIO format. 
@@ -64,7 +58,6 @@ class PromptManager:
 
     @staticmethod
     def get_qa_prompt(data_source, question: str, context: str) -> str:
-        """获取关系抽取的prompt - 改进版本"""
         if data_source == 'pubmedqa':
             prompt = f"""[Task: QA][Domain: qiaojin/PubMedQA]. 
             You are an expert in biomedical question answering. 
