@@ -83,27 +83,20 @@ prompt = prompt_manager.get_relation_extraction_prompt(text, entity1, entity2)
 ## 🎯 Supported Tasks
 
 ### 1. Relation Extraction
-- Supports ChemProt dataset
-- 10 relation types recognition
-- Complete evaluation metrics
-
 ### 2. Named Entity Recognition (NER)
-- Extensible entity types
-- Supports custom data formats
-
 ### 3. Question Answer
 
 ## 🔨 Command Line Usage
 
 ```bash
 # Run relation extraction task
-python main.py --task relation_extraction --max_samples 20 --verbose
+python main.py --task relation_extraction --max_samples 20 --verbose --data_source chemport 
 
 # Run NER task
-python main.py --task ner
+python main.py --task ner --data_source jnlpba
 
 # Run QA task
-python main.py --task qa
+python main.py --task qa --data_source medqa
 ```
 
 ## 📊 Configuration
