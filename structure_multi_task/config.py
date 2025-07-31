@@ -1,9 +1,9 @@
 # config.py
 """
-配置文件 - 存储所有配置信息
+Configuration file - Stores all configuration information
 """
 
-# 模型配置
+# Model configuration
 MODEL_CONFIG = {
     "model_name": "/home/siat/Data/synthetic/MinerU/paper_parse/multi_task/LLaMA-Factory/ms_swift/grpo_qwen3_outputs_8_new_new_fixed_goon/checkpoint-125",  # deepseek-ai/DeepSeek-R1-0528-Qwen3-8B
     "torch_dtype": "float16",
@@ -15,7 +15,7 @@ MODEL_CONFIG = {
     }
 }
 
-# 关系标签映射
+# Relation label mapping
 RELATION_LABELS = {
     'CPR:1': 'UPREGULATOR',
     'CPR:2': 'DIRECT-REGULATOR',
@@ -29,8 +29,8 @@ RELATION_LABELS = {
     'false': 'no relation'
 }
 
-# 关系标签映射 ['O', 'B-DNA', 'I-DNA', 'B-RNA', 'I-RNA', 'B-cell_line', 
-                    #   'I-cell_line', 'B-cell_type', 'I-cell_type', 'B-protein', 'I-protein']
+# Entity label ID mapping ['O', 'B-DNA', 'I-DNA', 'B-RNA', 'I-RNA', 'B-cell_line', 
+#                          'I-cell_line', 'B-cell_type', 'I-cell_type', 'B-protein', 'I-protein']
 RELATION_LABELS_IDS = {
     'O': 0,
     'B-DNA': 1,
@@ -45,15 +45,14 @@ RELATION_LABELS_IDS = {
     'I-protein': 10
 }      
 
-
-# 评估配置
+# Evaluation configuration
 EVALUATION_CONFIG = {
     "max_samples": 20,
     "metrics": ["precision", "recall", "f1", "accuracy"],
     "average_methods": ["macro", "micro"]
 }
 
-# 数据集配置
+# Dataset configuration
 DATASET_CONFIG = {
     "chemprot": {
         "name": "bigbio/chemprot",
