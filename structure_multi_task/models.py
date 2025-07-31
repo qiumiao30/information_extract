@@ -143,42 +143,6 @@ def extract_and_normalize_values(label_list):
             normalized.append('O')  # fallback
     return normalized
 
-
-
-# def extract_and_normalize_values(output_text):
-#     """Extract all label values from key-value pair output format and normalize them."""
-#     # Valid labels
-#     valid_labels = ['O', 'B-DNA', 'I-DNA', 'B-RNA', 'I-RNA',
-#                    'B-CELL_LINE', 'I-CELL_LINE',
-#                    'B-CELL_TYPE', 'I-CELL_TYPE',
-#                    'B-PROTEIN', 'I-PROTEIN']
-    
-#     # Extract values
-#     values = []
-#     for line in output_text.strip().split('\n'):
-#         if ':' in line:
-#             value = line.split(':', 1)[1].strip()
-#             values.append(value)
-    
-#     # Normalize labels using exact matching (prioritize longer labels first)
-#     normalized_values = []
-#     for value in values:
-#         # Clean the value (remove extra spaces, quotes, etc.)
-#         clean_value = value.strip().strip("'\"")
-        
-#         matched = False
-#         # Sort valid labels by length (longest first) to prioritize specific labels over 'O'
-#         for valid_label in sorted(valid_labels, key=len, reverse=True):
-#             if clean_value.upper() == valid_label.upper():
-#                 normalized_values.append(valid_label)
-#                 matched = True
-#                 break
-        
-#         # If no exact match found, assign 'O'
-#         if not matched:
-#             normalized_values.append('O')
-    
-#     return normalized_values
 def normalize_output_to_list(output):
     """
     将模型输出统一转换为 BIO 标签的 list 格式。
@@ -198,12 +162,6 @@ class NERModel(BaseModel):
     """命名实体识别模型"""
     def __init__(self, model_name: str = None):
         super().__init__(model_name)
-        # self.valid_labels = ['O', 'B-DNA', 'I-DNA', 'B-RNA', 'I-RNA', 'B-cell_line', 
-                    #   'I-cell_line', 'B-cell_type', 'I-cell_type', 'B-protein', 'I-protein']
-        # self.valid_labels = ['O', 'B-DNA', 'I-DNA', 'B-RNA', 'I-RNA',
-        #                      'B-CELL_LINE', 'I-CELL_LINE', 
-        #                      'B-CELL_TYPE', 'I-CELL_TYPE', 
-        #                      'B-PROTEIN', 'I-PROTEIN']
     
     def extract_entities(self, prompt: str) -> dict:
         """抽取实体"""
@@ -219,17 +177,10 @@ class NERModel(BaseModel):
 
         if isinstance(response, str):
             try:
-                # 解析字符串形式的列表（"[标签1,标签2,...]" → 实际列表）
                 response = ast.literal_eval(response)
             except (SyntaxError, ValueError):
-                # 备用方案：尝试手动提取标签
                 response = [tag.strip('\"') for tag in response.strip('[]').split(',')]
 
-        # response = [x.strip().strip('"') for x in response.split(',')]
-
-        # response = extract_and_normalize_values(response)
-        # framework = DCRMADEFramework()
-        # response = framework.extract_information(prompt, "ner")
         response = normalize_output_to_list(response)
         response = extract_and_normalize_values(response)
 
@@ -262,16 +213,10 @@ class QAModel(BaseModel):
         result = self.generate_response(prompt)
         response = result.get("content", "")
         thinking_content = result.get("thinking_content", "")
-        # print(f"思考内容： {thinking_content}")
         print(f"原始输出: {response}")
         
-        # 简单的分类结果解析
         response = response.lower()
 
-        # 如果response不是['yes', 'no', 'maybe']中的一个,替换为yes
-        # if response not in ['yes', 'no', 'maybe']:
-        #     response = 'yes'
-    
         return response
 
 class ModelFactory:
