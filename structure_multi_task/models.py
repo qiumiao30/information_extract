@@ -1,6 +1,6 @@
 # models.py
 """
-模型管理模块 - 统一管理所有模型
+Model Management Module - Manages all models uniformly.
 """
 
 import torch
@@ -13,66 +13,66 @@ from multi_agent import DCRMADEFramework
 
 
 class BaseModel:
-    """基础模型类"""
-    
+    """Base model class"""
+
     def __init__(self, model_name: str = None):
-        """初始化模型"""
+        """Initializes the model"""
         self.model_name = model_name or MODEL_CONFIG["model_name"]
         self.tokenizer = None
         self.model = None
         self.device = None
-        self.conversation_history = []  # 只添加这一行
-        
+        self.conversation_history = []  # Just add this line
+
     def load_model(self):
-        """加载模型"""
-        print(f"正在加载模型: {self.model_name}")
-        
+        """Loads the model"""
+        print(f"Loading model: {self.model_name}")
+
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
         self.model = AutoModelForCausalLM.from_pretrained(
             self.model_name,
             torch_dtype=getattr(torch, MODEL_CONFIG["torch_dtype"]),
             device_map=MODEL_CONFIG["device_map"],
         )
-        
+
         self.device = self.model.device
-        print(f"模型加载完成，设备: {self.device}")
-    
+        print(f"Model loaded, device: {self.device}")
+
     def generate_response(self, prompt: str, **kwargs) -> dict:
         """
-        生成回复，支持Qwen3的思考模式
-        
+        Generates a response, supporting Qwen3's thinking mode.
+
         Args:
-            prompt: 输入提示
-            enable_thinking: 是否启用思考模式，默认为True
-            **kwargs: 其他生成参数
-        
+            prompt: The input prompt.
+            enable_thinking: Whether to enable thinking mode, defaults to True.
+            **kwargs: Other generation parameters.
+
         Returns:
-            dict: 包含thinking_content和content的字典
+            dict: A dictionary containing 'thinking_content' and 'content'.
         """
         if self.model is None:
             self.load_model()
-        
+
         generation_config = {**MODEL_CONFIG["generation_config"], **kwargs}
-        
-        # 构建对话格式
+
+        # Build the conversation format
         messages = [{"role": "user", "content": prompt}]
         formatted_prompt = self.tokenizer.apply_chat_template(
-            messages, 
-            tokenize=False, 
+            messages,
+            tokenize=False,
             add_generation_prompt=False,
-            enable_thinking=True  # 启用思考模式
+            enable_thinking=True  # Enable thinking mode
         )
         model_inputs = self.tokenizer([formatted_prompt], return_tensors="pt").to(self.device)
-        
-        # conduct text completion
+
+        # Conduct text completion
         generated_ids = self.model.generate(
             **model_inputs,
             max_new_tokens=4096,
-            pad_token_id=self.tokenizer.eos_token_id  # 明确设置，消除提示
+            pad_token_id=self.tokenizer.eos_token_id  # Set explicitly to remove warnings
         )
-        output_ids = generated_ids[0][len(model_inputs.input_ids[0]):].tolist() 
+        output_ids = generated_ids[0][len(model_inputs.input_ids[0]):].tolist()
 
-        # parsing thinking content
+        # Parsing thinking content
         try:
             # rindex finding 151668 (</think>)
             THINK_END_ID = self.tokenizer.convert_tokens_to_ids('</think>')
@@ -83,40 +83,40 @@ class BaseModel:
         thinking_content = self.tokenizer.decode(output_ids[:index], skip_special_tokens=True).strip("\n")
         content = self.tokenizer.decode(output_ids[index:], skip_special_tokens=True).strip("\n")
 
-        # print(f"思考内容: {thinking_content}")
-        # print(f"生成内容: {content}")
-                
+        # print(f"Thinking content: {thinking_content}")
+        # print(f"Generated content: {content}")
+
         return {
             "thinking_content": thinking_content,
             "content": content
         }
 
 class RelationExtractionModel(BaseModel):
-    """关系抽取模型"""
-    
+    """Relation Extraction Model"""
+
     def __init__(self, model_name: str = None):
         super().__init__(model_name)
-        self.valid_labels = ['CPR:1', 'CPR:2', 'CPR:3', 'CPR:4', 'CPR:5', 
-                           'CPR:6', 'CPR:7', 'CPR:9', 'CPR:10', "0", "1", "0", "DDI-effect", "DDI-mechanism", "DDI-advise"]
-    
+        self.valid_labels = ['CPR:1', 'CPR:2', 'CPR:3', 'CPR:4', 'CPR:5',
+                               'CPR:6', 'CPR:7', 'CPR:9', 'CPR:10', "0", "1", "0", "DDI-effect", "DDI-mechanism", "DDI-advise"]
+
     def extract_relation(self, prompt: str) -> str:
-        """抽取关系"""
+        """Extracts relations"""
         result = self.generate_response(prompt)
         response = result.get("content", "")
         thinking_content = result.get("thinking_content", "")
-        print(f"原始模型输出: {response}")
+        print(f"Original model output: {response}")
         response = response.strip().upper()
 
         print(f"think model: ", thinking_content)
         
-        print(f"模型输出: {response}")
+        print(f"Model output: {response}")
         
-        # # 解析输出，提取关系标签
+        # # Parse the output to extract the relation label
         # for label in self.valid_labels:
         #     if label in response:
         #         return label
         
-        # return 'false'  # 默认无关系
+        # return 'false'  # Default to no relation
         return response
 
 import re
@@ -124,9 +124,9 @@ import re
 def extract_and_normalize_values(label_list):
     """Normalize a list of predicted labels: keep valid ones, set others to 'O'."""
     valid_labels = ['O', 'B-DNA', 'I-DNA', 'B-RNA', 'I-RNA',
-                    'B-CELL_LINE', 'I-CELL_LINE',
-                    'B-CELL_TYPE', 'I-CELL_TYPE',
-                    'B-PROTEIN', 'I-PROTEIN', 'I-DISEASE', 'B-DISEASE', 'B', 'I']
+                      'B-CELL_LINE', 'I-CELL_LINE',
+                      'B-CELL_TYPE', 'I-CELL_TYPE',
+                      'B-PROTEIN', 'I-PROTEIN', 'I-DISEASE', 'B-DISEASE', 'B', 'I']
     # valid_labels = ['0', '1', '2']
     
     normalized = []
@@ -145,26 +145,26 @@ def extract_and_normalize_values(label_list):
 
 def normalize_output_to_list(output):
     """
-    将模型输出统一转换为 BIO 标签的 list 格式。
-    支持原始字符串（空格、换行、混合分隔），也支持已有 list。
+    Converts model output uniformly to a list of BIO labels.
+    Supports raw strings (with spaces, newlines, mixed separators) and existing lists.
     """
     if isinstance(output, list):
         return output
     elif isinstance(output, str):
-        # 替换多种分隔符为统一空格，再 split
+        # Replace various separators with a single space, then split
         output = output.replace("\n", " ").replace(",", " ").strip()
-        output = " ".join(output.split())  # 去除多余空格
+        output = " ".join(output.split())  # Remove extra spaces
         return output.split(" ")
     else:
         raise ValueError(f"Unsupported output type: {type(output)}")
 
 class NERModel(BaseModel):
-    """命名实体识别模型"""
+    """Named Entity Recognition Model"""
     def __init__(self, model_name: str = None):
         super().__init__(model_name)
-    
+
     def extract_entities(self, prompt: str) -> dict:
-        """抽取实体"""
+        """Extracts entities"""
         # print(prompt)
         result = self.generate_response(prompt)
         response = result.get("content", "")
@@ -172,7 +172,7 @@ class NERModel(BaseModel):
         
         response = response.strip().upper()
 
-        print(f"原始输出: {response}")
+        print(f"Original output: {response}")
         print(f"thinking content: ", {thinking_content})
 
         if isinstance(response, str):
@@ -188,13 +188,13 @@ class NERModel(BaseModel):
 
 
 class ClassificationModel(BaseModel):
-    """文本分类模型"""
-    
+    """Text Classification Model"""
+
     def classify(self, prompt: str, classes: List[str]) -> str:
-        """分类文本"""
+        """Classifies text"""
         response = self.generate_response(prompt)
         
-        # 简单的分类结果解析
+        # Simple parsing of classification result
         response_lower = response.lower()
         for cls in classes:
             if cls.lower() in response_lower:
@@ -204,27 +204,27 @@ class ClassificationModel(BaseModel):
 
 
 class QAModel(BaseModel):
-    """问答推理模型"""
+    """Question Answering and Reasoning Model"""
     def __init__(self, model_name: str = None):
         super().__init__(model_name)
-    
+
     def extract_answer(self, prompt: str) -> str:
-        """问答"""
+        """Performs question answering"""
         result = self.generate_response(prompt)
         response = result.get("content", "")
         thinking_content = result.get("thinking_content", "")
-        print(f"原始输出: {response}")
+        print(f"Original output: {response}")
         
         response = response.lower()
 
         return response
 
 class ModelFactory:
-    """模型工厂"""
-    
+    """Model Factory"""
+
     @staticmethod
     def create_model(model_type: str, model_name: str = None):
-        """创建模型实例"""
+        """Creates a model instance"""
         if model_type == "relation_extraction":
             return RelationExtractionModel(model_name)
         elif model_type == "ner":
@@ -236,4 +236,4 @@ class ModelFactory:
         elif model_type == "base":
             return BaseModel(model_name)
         else:
-            raise ValueError(f"不支持的模型类型: {model_type}")
+            raise ValueError(f"Unsupported model type: {model_type}")
