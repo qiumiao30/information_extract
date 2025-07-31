@@ -2,7 +2,6 @@
 """
 Data processing module - for handling data from various sources
 """
-
 import pandas as pd
 from datasets import load_dataset
 from typing import List, Dict, Optional
@@ -130,7 +129,6 @@ class CustomDataProcessor(BaseDataProcessor):
                 })
 
         return pd.DataFrame(processed_data)
-
 
 class JNLPBADataProcessor(BaseDataProcessor):
     
@@ -266,8 +264,7 @@ class MedQADataProcessor(BaseDataProcessor):
                     'final_decision': final_decision
                 })
         
-        return pd.DataFrame(processed_data)
-    
+        return pd.DataFrame(processed_data) 
 
 class BioASQDataProcessor(BaseDataProcessor):
     def __init__(self):
