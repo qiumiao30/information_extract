@@ -91,9 +91,7 @@ prompt = prompt_manager.get_relation_extraction_prompt(text, entity1, entity2)
 - Extensible entity types
 - Supports custom data formats
 
-### 3. Text Classification
-- Multi-class classification
-- Custom category labels
+### 3. Question Answer
 
 ## 🔨 Command Line Usage
 
@@ -104,8 +102,8 @@ python main.py --task relation_extraction --max_samples 20 --verbose
 # Run NER task
 python main.py --task ner
 
-# Run classification task
-python main.py --task classification
+# Run QA task
+python main.py --task qa
 ```
 
 ## 📊 Configuration
