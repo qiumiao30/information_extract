@@ -307,7 +307,7 @@ class DataProcessorFactory:
     @staticmethod
     def create_processor(processor_type: str, **kwargs):
         if processor_type == "chemport":
-            return CustomDataProcessor(dataset_name="chemport", dataset_path="/home/siat/Data/synthetic/MinerU/RE/ChemProt_Corpus/chemprot_test_gs/chemprot_merged_output.tsv")
+            return CustomDataProcessor(dataset_name="chemport", dataset_path="data/RE/ChemProt_Corpus/chemprot_test_gs/chemprot_merged_output.tsv")
         elif processor_type == "jnlpba":
             return JNLPBADataProcessor()
         elif processor_type == "bc2gm":
@@ -317,12 +317,12 @@ class DataProcessorFactory:
         elif processor_type == "medqa":
             return MedQADataProcessor()
         elif processor_type == "bioasq":
-            return CustomDataProcessor(dataset_name="bioasq", dataset_path="/home/siat/Data/synthetic/MinerU/paper_parse/multi_task/data/seqcls/bioasq_hf/test.json")
+            return CustomDataProcessor(dataset_name="bioasq", dataset_path="data/seqcls/bioasq_hf/test.json")
         elif processor_type == "gad":
-            return CustomDataProcessor(dataset_name="gad", dataset_path="/home/siat/Data/synthetic/MinerU/paper_parse/multi_task/data/seqcls/GAD_hf/test.json")
+            return CustomDataProcessor(dataset_name="gad", dataset_path="data/seqcls/GAD_hf/test.json")
         elif processor_type == "ncbi":
-            return CustomDataProcessor(dataset_name="ncbi", dataset_path="/home/siat/Data/synthetic/MinerU/paper_parse/multi_task/data/tokcls/NCBI-disease_hf/test.json")
+            return CustomDataProcessor(dataset_name="ncbi", dataset_path="data/tokcls/NCBI-disease_hf/test.json")
         elif processor_type == "ddi":
-            return CustomDataProcessor(dataset_name="ddi", dataset_path="/home/siat/Data/synthetic/MinerU/paper_parse/multi_task/data/seqcls/DDI_hf/test.json")
+            return CustomDataProcessor(dataset_name="ddi", dataset_path="data/seqcls/DDI_hf/test.json")
         else:
             raise ValueError(f"Unsupported processor type: {processor_type}")
