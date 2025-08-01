@@ -5,7 +5,7 @@ python multi_task_dataset.py  # Download dataset and Unified Processed
 
 # step 2
 ```python
-python sample_dataset.py # sample 2000 examples
+python sample_dataset.py # sample 1000 examples
 ```
 
 # step 3
