@@ -75,7 +75,7 @@ def sample_data(categories, sample_size=None):
 def main():
     # Load your actual data here
     # For example: 
-    with open('/home/siat/Data/synthetic/MinerU/paper_parse/multi_task/multitask_bio_dataset_all_8_newnew.json', 'r', encoding='utf-8') as f:
+    with open('data/multitask_bio_dataset.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
     
     # Set random seed for reproducibility
@@ -118,7 +118,7 @@ def main():
     random.shuffle(final_sampled_list)
     
     # Save sampled data
-    with open('/home/siat/Data/synthetic/MinerU/paper_parse/multi_task/multitask_bio_dataset_all_sample_8_new_new1.json', 'w', encoding='utf-8') as f:
+    with open('data/multitask_bio_dataset_sample.json', 'w', encoding='utf-8') as f:
         json.dump(final_sampled_list, f, ensure_ascii=False, indent=2)
     
     print(f"\nSampled dataset contains {len(final_sampled_list)} total samples")
