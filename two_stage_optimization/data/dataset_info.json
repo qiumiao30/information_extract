@@ -1,4 +1,13 @@
 {
+  "multi_task": {
+    "file_name": "multitask_bio_dataset_sample_prompt.json",
+    "columns": {
+      "prompt": "Instruction",
+      "query": "input",
+      "response": "output",
+      "task": "task"
+    }
+  },
   "identity": {
     "file_name": "identity.json"
   },
