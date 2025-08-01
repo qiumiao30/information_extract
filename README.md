@@ -54,7 +54,7 @@ Make sure you have Python installed with the required dependencies. You may need
 - Ensure you have sufficient disk space for the dataset download and processing
 - The sampling size (1000 examples) can be modified in `sample_dataset.py` if needed
 
-# Acknowledgements
+## Acknowledgements
 We thank the following open-source projects that made this work possible:
 
 - TRL (Transformer Reinforcement Learning): Train transformer language models with reinforcement learning. This project provided essential RL training utilities and methodologies.
