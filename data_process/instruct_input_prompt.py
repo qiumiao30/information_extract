@@ -1,15 +1,13 @@
 import json
 
-# 读取 JSON 文件
-input_file = 'data/multitask_bio_dataset_sample.json'  # 替换成你实际的文件路径
-output_file = 'data/multitask_bio_dataset_sample_prompt.json'  # 输出文件路径
+input_file = 'data/multitask_bio_dataset_sample.json'  
+output_file = 'data/multitask_bio_dataset_sample_prompt.json'  
 
 try:
-    # 打开并加载 JSON 数据
     with open(input_file, 'r', encoding='utf-8') as f:
         data = json.load(f)
 
-    # 处理数据：构造新字典，仅保留 prompt、output、task
+    # Save prompt、output、task
     new_data = []
     for entry in data:
         if 'Instruction' in entry and 'input' in entry and 'output' in entry and 'task' in entry:
@@ -23,7 +21,6 @@ try:
         else:
             print(f"Warning: Missing required keys in entry: {entry}")
 
-    # 保存新数据
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(new_data, f, indent=4, ensure_ascii=False)
 
