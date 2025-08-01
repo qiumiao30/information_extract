@@ -1,5 +1,5 @@
 ### model
-model_name_or_path: Qwen/Qwen3-1.7B
+model_name_or_path: Qwen/Qwen3-4B
 trust_remote_code: true
 
 ### method
@@ -18,7 +18,7 @@ preprocessing_num_workers: 16
 dataloader_num_workers: 4
 
 ### output
-output_dir: saves/Qwen3_multi_task/full/sft_8_newnew
+output_dir: saves/Qwen3_multi_task/full/sft
 logging_steps: 10
 save_steps: 1000
 plot_loss: true
