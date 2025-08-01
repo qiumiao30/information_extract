@@ -5,7 +5,7 @@ Configuration file - Stores all configuration information
 
 # Model configuration
 MODEL_CONFIG = {
-    "model_name": "/home/siat/Data/synthetic/MinerU/paper_parse/multi_task/LLaMA-Factory/ms_swift/grpo_qwen3_outputs_8_new_new_fixed_goon/checkpoint-125",  # deepseek-ai/DeepSeek-R1-0528-Qwen3-8B
+    "model_name": "****Model Path or Model Name*****",  # deepseek-ai/DeepSeek-R1-0528-Qwen3-8B
     "torch_dtype": "float16",
     "device_map": "auto",
     "generation_config": {
