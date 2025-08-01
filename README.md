@@ -54,6 +54,9 @@ Make sure you have Python installed with the required dependencies. You may need
 - Ensure you have sufficient disk space for the dataset download and processing
 - The sampling size (1000 examples) can be modified in `sample_dataset.py` if needed
 
-## Support
+# Acknowledgements
+We thank the following open-source projects that made this work possible:
 
-If you encounter any issues with the processing pipeline, please check that all dependencies are properly installed and that you have the necessary permissions for file operations.
+- TRL (Transformer Reinforcement Learning): Train transformer language models with reinforcement learning. This project provided essential RL training utilities and methodologies.
+- LLaMA-Factory: Unified Efficient Fine-Tuning of 100+ LLMs & VLMs (ACL 2024). This framework facilitated efficient model fine-tuning and optimization.
+
