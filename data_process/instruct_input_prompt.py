@@ -1,8 +1,8 @@
 import json
 
 # 读取 JSON 文件
-input_file = '/home/siat/Data/synthetic/MinerU/paper_parse/multi_task/multitask_bio_dataset_all_sample_8_new_new1.json'  # 替换成你实际的文件路径
-output_file = '/home/siat/Data/synthetic/MinerU/paper_parse/multi_task/multitask_bio_dataset_all_sample_prompt_8_new_new1.json'  # 输出文件路径
+input_file = 'data/multitask_bio_dataset_sample.json'  # 替换成你实际的文件路径
+output_file = 'data/multitask_bio_dataset_sample_prompt.json'  # 输出文件路径
 
 try:
     # 打开并加载 JSON 数据
