@@ -1,6 +1,6 @@
 # Multi-task NLP System
 
-A structured multi-task natural language processing system based on LLM, supporting relation extraction, named entity recognition, text classification and other tasks.
+A structured multi-task natural language processing system based on LLM, supporting relation extraction, named entity recognition, question answer and other tasks.
 
 ## 🚀 Features
 
@@ -174,17 +174,3 @@ The system supports multiple evaluation metrics:
 - Recall  
 - F1-Score
 - Macro/Micro/Weighted Average
-
-## 🤝 Contributing
-
-Welcome to submit Issues and Pull Requests to improve the project!
-
-## 📄 License
-
-MIT License
-
-## 🔗 Related Resources
-
-- [Transformers Documentation](https://huggingface.co/docs/transformers)
-- [Datasets Documentation](https://huggingface.co/docs/datasets)
-- [ChemProt Dataset](https://huggingface.co/datasets/bigbio/chemprot)
