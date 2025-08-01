@@ -8,7 +8,7 @@ To address these challenges, we introduce GRASP (Group-Relative Adaptive Structu
 
 ## Model Architecture
 
-![GRASP Framework]([https://github.com/qiumiao30/information_extract/blob/master/assets/model.png](https://github.com/qiumiao30/information_extract/blob/master/assets/model.png))
+![GRASP Framework]([assets/model.png](assets/model.png))
 
 *Figure 1: Overview of the GRASP framework showing the hierarchical task-aware prompt design and Group-Relative Policy Optimization strategy.*
 
