@@ -15,6 +15,8 @@ To address these challenges, we introduce GRASP (Group-Relative Adaptive Structu
 ## 🔧 Step 1: Data Processing
 **Folder**: `data_process`
 
+Dataset from [Data](https://github.com/michiyasunaga/LinkBERT)
+
 This step handles data preprocessing, formatting, and organization. It includes:
 - Loading raw input data, transforming data into SFT formats
 - Sample dataset generation
